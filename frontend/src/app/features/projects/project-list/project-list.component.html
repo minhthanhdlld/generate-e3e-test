@@ -1,0 +1,79 @@
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-900 tracking-tight">Projects</h1>
+      <p class="text-sm text-slate-500 mt-0.5">{{ total }} project(s)</p>
+    </div>
+    <div class="flex gap-2 w-full sm:w-auto">
+      <div class="relative flex-1 sm:w-72">
+        <input
+          type="text"
+          [formControl]="searchCtrl"
+          placeholder="Search by name…"
+          class="w-full h-9 pl-9 pr-3 rounded-lg border border-slate-200 bg-white text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-500"
+        />
+        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <a
+        routerLink="/projects/new"
+        class="h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-sm font-medium text-white inline-flex items-center whitespace-nowrap"
+      >
+        + New Project
+      </a>
+    </div>
+  </div>
+
+  @if (errorMsg) {
+    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">{{ errorMsg }}</div>
+  }
+
+  @if (loading) {
+    <div class="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Loading…</div>
+  } @else if (items.length === 0) {
+    <div class="rounded-xl border border-dashed border-slate-300 bg-white p-12 text-center">
+      <h3 class="text-sm font-semibold text-slate-900">No projects yet</h3>
+      <p class="text-sm text-slate-500 mt-1">Create your first project to get started.</p>
+      <a routerLink="/projects/new" class="mt-4 inline-flex h-9 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-sm font-medium text-white items-center">+ New Project</a>
+    </div>
+  } @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      @for (p of items; track p.id) {
+        <article class="group rounded-xl border border-slate-200 bg-white p-5 hover:shadow-sm transition">
+          <div class="flex items-start justify-between gap-2">
+            <div class="min-w-0">
+              <h3 class="text-sm font-semibold text-slate-900 truncate">{{ p.name }}</h3>
+              <p class="text-xs text-slate-500 truncate mt-0.5">{{ p.url }}</p>
+            </div>
+            <app-status-pill [status]="p.status"></app-status-pill>
+          </div>
+          @if (p.description) {
+            <p class="mt-3 text-sm text-slate-600 line-clamp-2">{{ p.description }}</p>
+          }
+          <div class="mt-4 flex items-center justify-between">
+            <span class="text-xs text-slate-400">{{ p.updatedAt | date:'short' }}</span>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                (click)="remove(p)"
+                [disabled]="deletingId === p.id"
+                class="h-8 px-3 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-50"
+              >
+                {{ deletingId === p.id ? 'Deleting…' : 'Delete' }}
+              </button>
+              <button
+                type="button"
+                (click)="open(p)"
+                class="h-8 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-xs font-medium text-white"
+              >
+                Open
+              </button>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

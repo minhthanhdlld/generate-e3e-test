@@ -1,0 +1,43 @@
+<section class="bg-white rounded-xl border border-slate-200 shadow-sm">
+  <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+    <h2 class="text-sm font-semibold text-slate-900">Project details</h2>
+    <a [routerLink]="['/projects', project.id, 'edit']"
+       class="h-9 px-3 rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50">
+      Edit
+    </a>
+  </div>
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-5 px-6 py-5">
+    <div>
+      <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Name</dt>
+      <dd class="mt-1 text-sm text-slate-900">{{ project.name }}</dd>
+    </div>
+    <div>
+      <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Status</dt>
+      <dd class="mt-1"><app-status-pill [status]="project.status"></app-status-pill></dd>
+    </div>
+    <div class="sm:col-span-2">
+      <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">URL</dt>
+      <dd class="mt-1 text-sm">
+        <a [href]="project.url" target="_blank" rel="noopener" class="text-indigo-600 hover:underline break-all">{{ project.url }}</a>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Target username</dt>
+      <dd class="mt-1 text-sm text-slate-900">{{ project.targetUsername }}</dd>
+    </div>
+    <div>
+      <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Created</dt>
+      <dd class="mt-1 text-sm text-slate-900">{{ project.createdAt | date:'medium' }}</dd>
+    </div>
+    <div>
+      <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Updated</dt>
+      <dd class="mt-1 text-sm text-slate-900">{{ project.updatedAt | date:'medium' }}</dd>
+    </div>
+    @if (project.description) {
+      <div class="sm:col-span-2">
+        <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Description</dt>
+        <dd class="mt-1 text-sm text-slate-700 whitespace-pre-wrap">{{ project.description }}</dd>
+      </div>
+    }
+  </dl>
+</section>

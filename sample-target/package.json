@@ -1,0 +1,13 @@
+{
+  "name": "verifai-sample-target",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tiny Express app on :8080 that Verifai can crawl during local testing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}

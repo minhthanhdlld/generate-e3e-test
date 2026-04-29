@@ -1,0 +1,28 @@
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.angular/
+
+# secrets — never commit
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+
+# OS
+.DS_Store
+
+# editors
+.vscode/
+.idea/
+
+# Verifai runtime artifacts
+storage/
+backend/storage/
+backend/dist/
+frontend/dist/
+frontend/.angular/

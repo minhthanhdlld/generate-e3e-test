@@ -1,0 +1,236 @@
+
+Great! Now you take an additional role: 5+ years of experience on Technical Architect and Software Development.Let read the equirements.md file, then help to generate:
+features_tracking.md: because I will ask you to help generating code for this project. You will need to have this file to track the list of
+features you need to implement and their progress. The file format:
+- Feature by feature, from foundation, less dependent features to more dependent features ​
+- Each feature contains list of testable functions (user stories) 
+- Each function content should have:
+    + Function title ​
+    + Function Description ​
+    + Implement Components (Frontend, Backend, Services) ​
+    + Status: Todo or Completed.
+
+Project Specification: Verifai
+Goal: Build Verifai - a browser-based automated website crawler that generates test cases using AI (Generative UI Testing).
+
+Core Product: Verifai is a tool that crawls a target website, maps its UI structure into a visual graph, and then uses Generative AI to automatically create test cases based on the visual structure.
+
+User Roles
+1. Admin: Can manage user accounts, permissions, and view usage analytics. Not directly involved in the crawling workflow.
+2. Standard User (Tester): The main persona who will use the crawler to test their websites.
+3. Target Application User: The end-users of the websites that are being crawled and tested.
+
+Business Context
+Manual UI testing is time-consuming and often repetitive. Teams need to ensure their web applications are accessible and functional across different devices. Verifai automates this process by using AI to understand the visual structure of a website (including interactive elements like buttons, forms, and links) and then generates comprehensive test scenarios to ensure the site works as expected.
+
+The system must be able to:
+
+Authenticate and manage users
+Create and manage "Projects"
+Crawl websites (Target Applications)
+Map the UI structure into a visual graph
+Generate test cases based on the UI graph
+Execute and display the test cases
+
+Key Features
+1. User Authentication & Role Management
+Description: A standard authentication flow for Standard Users and Admins.
+Standard User: Can access the dashboard, create projects, and view test results.
+Admin: Can view usage analytics and user management screens.
+Implementation Details: Separate authentication for Standard Users and Admins. Admins should have additional screens for analytics.
+
+2. Project Management
+Description: The central hub for organizing crawling activities. A project represents a specific website or application that needs to be crawled and tested.
+
+Functionality:
+
+Project Creation: Users must provide a URL, target username, and password (if needed to access the site).
+Project Details: Each project should have a unique identifier and a name.
+
+3. Automated Website Crawling
+Description: A core feature that explores the website to discover its pages and structure.
+
+Trigger: Initiated by the Standard User.
+Process: The system automatically navigates through the website, following links to discover all reachable pages. It should handle complex navigation patterns, including logins and authenticated sections.
+Technical Implementation: Use Playwright for automated browser control.
+
+4. Visual UI Mapping
+Description: Converts the crawled website into a visual representation of its structure.
+
+Output: A graph where nodes represent pages (or distinct UI states) and edges represent actions (e.g., button clicks, link navigations) that connect these pages.
+Interaction: Users can view this graph to understand the website's layout and flow. Users can select a specific node to regenerate test cases for that particular page.
+
+5. Generative UI Test Case Creation
+Description: Uses AI to generate test cases based on the visual UI map.
+
+Input: The generated UI graph and the original credentials (if used during crawling).
+Output: A list of structured test cases that can be used to verify the website's functionality and accessibility.
+
+6. Test Results
+Description: After test cases are generated, users can execute them to identify issues.
+
+Execution: Run the generated test cases using Playwright to verify they pass or fail.
+Display: Show the results in a clear, actionable format, indicating which test cases passed and which failed.
+
+Technical Requirements
+Core Stack:
+Frontend: Angular (Reactive Forms, Standalone Components) or React/Next.js (recommended for dynamic UI). Use TypeScript.
+Backend: NestJS (Node.js) for REST API and modular architecture. Use TypeORM for data.
+Database: PostgreSQL for structured data (Users, Projects, Credentials).
+Crawling: Playwright for browser automation and screenshot capabilities.
+Encryption: AES-256-GCM for sensitive data (passwords) and bcrypt for user credentials.
+Authentication: JWT for secure API access.
+UI State: Use BehaviorSubject (RxJS) for managing complex UI states (e.g., the crawling graph, test case lists).
+Layout: A main shell with a sidebar (for navigation) and a main content area (for showing graphs and test results).
+
+Data Model:
+
+Users: Stores user credentials and role information.
+Projects: Stores the target website's URL, username, and password.
+CrawlRuns: Tracks the status of each crawl (e.g., Queued, Running, Completed).
+UiNodes: Represents a single screen or distinct UI state discovered during crawling.
+UiEdges: Represents the transitions (actions) between UiNodes.
+GeneratedTestCasePrompts: Stores the prompts used to generate test cases.
+GeneratedTestCases: Stores the test cases that were generated, including their status (Pass/Fail).
+Additional Notes
+Accessibility: Ensure the frontend is accessible, providing clear focus states for keyboard navigation.
+Error Handling: Provide user-friendly messages for failed crawls or authentication issues.
+Performance: Optimize crawling to avoid unnecessary requests and handle large websites efficiently.
+Security: Secure storage of credentials and proper use of JWT tokens.
+
+You are the Orchestrator Agent for the Verifai project.Let read the features_tracking.md, agent_requirement.txt file, then help to generate:
+
+ Create the structure below with real:
+
+## TARGET STRUCTURE
+
+.claude/
+├── agents/
+│   ├── frontend-developer.md
+│   ├── backend-developer.md
+│   └── database-architect.md
+│
+├── skills/
+│   
+│   
+│  
+│
+└── commands/
+  
+ 
+   
+
+CLAUDE.md                  (root — main instructions)
+.claudeignore              (root — exclude node_modules, dist, .env, etc.)
+
+## FILE REQUIREMENTS
+
+### Agents (.claude/agents/*.md)
+Each agent must have YAML frontmatter:
+```yaml
+---
+name: agent-name
+description: When this agent should be invoked (be specific about triggers)
+tools: Read, Write, Edit, Bash, Grep, Glob   # restrict per agent's role
+model: sonnet
+---
+```
+Then include: role & responsibilities, step-by-step workflow, coding standards 
+it enforces, and how it hands off to other agents.
+
+**Agent specifics:**
+- `frontend-developer`: React/Next.js, TypeScript, Tailwind, accessibility, 
+  component architecture, state management. Tools: Read, Write, Edit, Bash, Glob.
+- `backend-developer`: REST/GraphQL APIs, auth, validation, error handling, 
+  business logic. Stack-agnostic but opinionated (Node/Express, FastAPI, etc.). 
+  Tools: Read, Write, Edit, Bash, Grep.
+- `database-architect`: Schema design, migrations, indexing, query optimization, 
+  data integrity. Covers PostgreSQL/MySQL primarily, plus MongoDB notes. 
+  Tools: Read, Write, Edit, Bash.
+
+### Skills (.claude/skills/*/SKILL.md)
+Each skill must have:
+```yaml
+---
+name: skill-name
+description: Specific trigger conditions — when Claude should auto-load this skill
+---
+```
+Then include: core concepts, best practices, anti-patterns, concrete code examples, 
+and a checklist.
+
+**Skill specifics:**
+- `frontend-patterns`: Component composition, custom hooks, performance (memo, 
+  lazy loading), form handling, error boundaries.
+- `api-design`: RESTful conventions, status codes, pagination, versioning, 
+  request/response schemas, OpenAPI basics, rate limiting.
+- `database-modeling`: Normalization (1NF–3NF), relationships, indexes, 
+  constraints, naming conventions, migration safety.
+
+### Commands (.claude/commands/*.md)
+Each command file's first line is a one-line description. Use `$ARGUMENTS` for 
+user input. Include workflow steps and usage examples.
+
+- `/scaffold <project-type>` — bootstrap a new project (e.g., `nextjs-api`, 
+  `express-postgres`, `fastapi-react`)
+- `/add-feature <feature-name>` — coordinate frontend + backend + DB agents 
+  to add a complete feature end-to-end
+- `/review` — run code review across the codebase (security, performance, 
+  conventions)
+
+### CLAUDE.md (root)
+- Refactor to CLAUDE.md to meet agents_requirement.txt and features_tracking.md, but still keep requirement has been design.
+
+### .claudeignore
+Exclude: `node_modules/`, `dist/`, `build/`, `.next/`, `coverage/`, `.env*`, 
+`*.log`, `.DS_Store`, `.git/`.
+
+## EXECUTION
+
+1. Create all folders and files with complete, working content
+2. Run `tree .claude` and `ls -la` to verify
+3. Print a short summary: what was created + 3 example commands the user can try next
+
+some comments:
+_Read requirements.md and refactor features_tracking.md with:
++Generate phase follow requirements.md
++Generate detailed task for each phase in features_tracking.md
++Ensure agent still apply fullfill with new features_tracking.md
+
+You are 5+ years of experience on Software Development, especially on Web Application with Angular, TailwindCSS, Nestjs, TypeORM, PostgreSQL.
+You will help me in developing my Web Application.
+Firstly let read:
+- requirements.md
+- features_tracking.md
+to understand my project first. Then wait for my signal.
+
+
+Let start Phase 0:Project Setup & Infrastructure. Your steps:
+1/ Generate code
+2/ Run Compile/Build Commands for related services and fix errors if any
+3/ Update features_tracking file to mark the feature completed.
+
+Let start Phase 1:Database Schema & Backend Foundation. Your steps:
+1/ Generate code
+2/ Run Compile/Build Commands for related services (frontend, backend) and fix errors if any
+3/ Update features_tracking file to mark the feature completed.
+
+Let continue execute Phase 2: Authentication (Register / Login / Logoff). Your steps:
+1/ Generate code
+2/ Run Compile/Build Commands for related services and fix errors if any
+3/ Update features_tracking file to mark the feature completed.
+
+Let continue execute Phase 3: Project Creation. Your steps:
+1/ Generate code
+2/ Run Compile/Build Commands for related services and fix errors if any
+3/ Update features_tracking file to mark the feature completed.
+
+Let continue execute Phase 4: Project List and Phase 5: Project Detail. Your steps:
+1/ Generate code
+2/ Run Compile/Build Commands for related services and fix errors if any
+3/ Update features_tracking file to mark the feature completed.
+
+Let continue execute Phase 6: Generate Test Case Automation and Phase 7: UI Test Automation. Your steps:
+1/ Generate code
+2/ Run Compile/Build Commands for related services and fix errors if any
+3/ Update features_tracking file to mark the feature completed.

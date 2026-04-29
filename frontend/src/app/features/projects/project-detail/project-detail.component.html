@@ -1,0 +1,67 @@
+<div class="space-y-6">
+  <div>
+    <a routerLink="/projects" class="text-xs font-medium text-indigo-600 hover:underline">← Back to projects</a>
+  </div>
+
+  @if (loading) {
+    <div class="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Loading…</div>
+  } @else if (errorMsg) {
+    <div class="rounded-xl border border-rose-200 bg-rose-50 p-6 text-sm text-rose-700">{{ errorMsg }}</div>
+  } @else if (project) {
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div class="min-w-0">
+        <div class="flex items-center gap-3">
+          <h1 class="text-2xl font-semibold text-slate-900 tracking-tight truncate">{{ project.name }}</h1>
+          <app-status-pill [status]="project.status"></app-status-pill>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-b border-slate-200">
+      <nav class="flex gap-6 -mb-px">
+        <button type="button"
+                (click)="setTab('general')"
+                class="py-3 text-sm font-medium border-b-2"
+                [class.border-indigo-600]="activeTab === 'general'"
+                [class.text-indigo-600]="activeTab === 'general'"
+                [class.border-transparent]="activeTab !== 'general'"
+                [class.text-slate-500]="activeTab !== 'general'"
+                [class.hover:text-slate-700]="activeTab !== 'general'">
+          General Information
+        </button>
+        <button type="button"
+                (click)="setTab('graph')"
+                class="py-3 text-sm font-medium border-b-2"
+                [class.border-indigo-600]="activeTab === 'graph'"
+                [class.text-indigo-600]="activeTab === 'graph'"
+                [class.border-transparent]="activeTab !== 'graph'"
+                [class.text-slate-500]="activeTab !== 'graph'"
+                [class.hover:text-slate-700]="activeTab !== 'graph'">
+          Graph UI
+        </button>
+        <button type="button"
+                (click)="setTab('test-cases')"
+                class="py-3 text-sm font-medium border-b-2"
+                [class.border-indigo-600]="activeTab === 'test-cases'"
+                [class.text-indigo-600]="activeTab === 'test-cases'"
+                [class.border-transparent]="activeTab !== 'test-cases'"
+                [class.text-slate-500]="activeTab !== 'test-cases'"
+                [class.hover:text-slate-700]="activeTab !== 'test-cases'">
+          Generate Test Cases
+        </button>
+      </nav>
+    </div>
+
+    @switch (activeTab) {
+      @case ('general') {
+        <app-general-info-tab [project]="project"></app-general-info-tab>
+      }
+      @case ('graph') {
+        <app-graph-ui-tab [projectId]="project.id"></app-graph-ui-tab>
+      }
+      @case ('test-cases') {
+        <app-test-cases-tab [projectId]="project.id"></app-test-cases-tab>
+      }
+    }
+  }
+</div>

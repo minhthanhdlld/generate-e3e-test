@@ -1,0 +1,2 @@
+/* Cytoscape canvas container — let it fill its host */
+:host { display: block; }

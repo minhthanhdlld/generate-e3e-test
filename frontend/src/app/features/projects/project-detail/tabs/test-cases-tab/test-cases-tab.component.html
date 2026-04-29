@@ -1,0 +1,77 @@
+<div class="space-y-4">
+  <div class="flex items-center justify-between gap-3">
+    <div>
+      <h2 class="text-sm font-semibold text-slate-900">Generate Test Cases</h2>
+      <p class="text-xs text-slate-500 mt-0.5">
+        Builds a prompt from the project's general info. With <code class="px-1 py-0.5 rounded bg-slate-100">OPENAI_API_KEY</code>
+        or <code class="px-1 py-0.5 rounded bg-slate-100">ANTHROPIC_API_KEY</code> set in <code class="px-1 py-0.5 rounded bg-slate-100">backend/.env</code>,
+        a generated result is also returned.
+      </p>
+    </div>
+    <button
+      type="button"
+      (click)="generate()"
+      [disabled]="generating || loading"
+      class="h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-sm font-medium text-white inline-flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+    >
+      @if (generating) {
+        <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"></circle>
+          <path d="M12 2a10 10 0 0110 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+        </svg>
+      }
+      Generate
+    </button>
+  </div>
+
+  @if (errorMsg) {
+    <div class="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{{ errorMsg }}</div>
+  }
+
+  @if (loading) {
+    <div class="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">Loading…</div>
+  } @else {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <!-- Prompt -->
+      <div class="rounded-xl border border-slate-200 bg-white flex flex-col">
+        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-slate-900">Prompt</h3>
+          <button (click)="copyPrompt()" [disabled]="!record?.promptText"
+                  class="h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 inline-flex items-center gap-1.5">
+            {{ promptCopied ? 'Copied!' : 'Copy' }}
+          </button>
+        </div>
+        <textarea readonly
+                  class="flex-1 m-0 p-4 h-[420px] w-full text-xs font-mono text-slate-800 bg-slate-50 rounded-b-xl resize-none focus:outline-none"
+                  [value]="record?.promptText || ''"
+                  placeholder="Click Generate to build a prompt."></textarea>
+      </div>
+
+      <!-- Result -->
+      <div class="rounded-xl border border-slate-200 bg-white flex flex-col">
+        <div class="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-slate-900">Generated Result</h3>
+          <button (click)="copyResult()" [disabled]="!record?.generatedResult"
+                  class="h-8 px-2.5 rounded-lg border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 inline-flex items-center gap-1.5">
+            {{ resultCopied ? 'Copied!' : 'Copy' }}
+          </button>
+        </div>
+        @if (record?.generatedResult) {
+          <textarea readonly
+                    class="flex-1 m-0 p-4 h-[420px] w-full text-xs font-mono text-slate-800 bg-slate-50 rounded-b-xl resize-none focus:outline-none"
+                    [value]="record?.generatedResult || ''"></textarea>
+        } @else {
+          <div class="p-6 text-center text-sm text-slate-500 h-[420px] flex items-center justify-center">
+            No LLM key configured. Set <code class="px-1 py-0.5 rounded bg-slate-100 mx-1">OPENAI_API_KEY</code>
+            or <code class="px-1 py-0.5 rounded bg-slate-100 mx-1">ANTHROPIC_API_KEY</code>
+            in <code class="px-1 py-0.5 rounded bg-slate-100 mx-1">backend/.env</code> to populate this pane.
+          </div>
+        }
+      </div>
+    </div>
+
+    @if (record) {
+      <p class="text-xs text-slate-400">Latest record: {{ record.createdAt | date:'medium' }}</p>
+    }
+  }
+</div>

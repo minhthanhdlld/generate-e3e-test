@@ -1,0 +1,49 @@
+You are an AI orchestrator.Carefully read the following requirements, think step by step, andthen provide an md file about detailed requirements - The detailed requirements should be organized phase by phase,. Do not ask any follow-up questions.
+
+Technical Stack
+- Frontend: Angular with TailwindCSS
+- Backend: NestJS using TypeORM to connect to a PostgreSQL database
+- Database: PostgreSQL managed via pgAdmin4
+- UI: tham khảo feature folder
+- The system only needs to run on a local server environment
+
+Features
+1. Authentication (Authority)
+- Register
+- Login
+- Logoff
+2. Project Creation
+Input fields:
+- U RL
+- Username
+- Password
+- Other necessary fields
+3. Project List
+- A page to display the list of created projects
+4. Project Detail
+A page that shows detailed information of a project, including the following sections:
+    a. General Information
+    - Display all basic project information
+    b. Graph UI
+    - Based on the provided URL, username, and password during project creation:
+    - Build an automation service to validate and access the URL
+    - Crawl the website and collect UI-related data
+    - Generate a file (e.g., crawl.ts)
+    - Execute it using Node.js
+    - From the collected data, generate a UI map or UI graph representation of the website
+    (You may choose any suitable approach to generate the UI graph)
+    c. Generate Test Case Automation
+        - Based on:
+            - The project’s general information
+        - Create a prompt that generates automated test cases in string format
+        - This generated result will only be reused within this section
+
+Make sure to follow the requirements step by step and design the system accordingly.
+
+
+Some comments:
+_remove docker
+_generate detail requirements to md file 
+
+
+

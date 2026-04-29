@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.next/
+coverage/
+.env
+.env.*
+*.log
+.DS_Store
+.git/
+
+# Verifai-specific local artifacts (generated at runtime, never committed)
+storage/
+backend/storage/
+frontend/.angular/
+backend/dist/
+frontend/dist/

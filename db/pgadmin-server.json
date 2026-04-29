@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Verifai (local)",
+      "Group": "Servers",
+      "Host": "localhost",
+      "Port": 5432,
+      "MaintenanceDB": "verifai",
+      "Username": "verifai_app",
+      "SSLMode": "prefer",
+      "Comment": "Local Verifai development database"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "verifai",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Verifai — local-only Angular + NestJS + PostgreSQL workspace",
+  "scripts": {
+    "dev": "concurrently -n be,fe -c blue,green \"npm --prefix backend run start:dev\" \"npm --prefix frontend start\"",
+    "setup": "npm --prefix backend run migration:run --if-present && npm --prefix backend run seed:admin --if-present",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "lint": "npm --prefix backend run lint --if-present && npm --prefix frontend run lint --if-present",
+    "verify:health": "curl -fsS http://localhost:3000/api/health"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
