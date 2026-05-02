@@ -1,9 +1,12 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { rm } from 'fs/promises';
+import { join } from 'path';
 import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -31,6 +34,8 @@ export interface PaginatedProjects {
 
 @Injectable()
 export class ProjectsService {
+  private readonly logger = new Logger(ProjectsService.name);
+
   constructor(
     @InjectRepository(Project)
     private readonly projects: Repository<Project>,
@@ -102,6 +107,16 @@ export class ProjectsService {
   async remove(id: string, ownerId: string): Promise<void> {
     const project = await this.findEntityOwnedOrThrow(id, ownerId);
     await this.projects.remove(project);
+
+    // Remove storage folder created by crawler runs (screenshots, scripts, raw data, logs).
+    const projectStorageDir = join(process.cwd(), 'storage', 'projects', id);
+    try {
+      await rm(projectStorageDir, { recursive: true, force: true });
+      this.logger.log(`Deleted storage for project ${id}`);
+    } catch (err) {
+      // Non-fatal: log the error but don't fail the HTTP response.
+      this.logger.warn(`Could not delete storage for project ${id}: ${(err as Error).message}`);
+    }
   }
 
   async findEntityOwnedOrThrow(id: string, ownerId: string): Promise<Project> {

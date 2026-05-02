@@ -20,9 +20,9 @@ coverage/
 .vscode/
 .idea/
 
-# Verifai runtime artifacts
-storage/
-backend/storage/
+# Verifai runtime artifacts — ignore crawler output but keep directory structure
+# Ignore everything inside each project's crawl folder (screenshots, scripts, raw data, logs)
+backend/storage/projects/*/
 backend/dist/
 frontend/dist/
 frontend/.angular/

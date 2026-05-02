@@ -50,7 +50,9 @@
       "Bash(npx playwright *)",
       "Bash(curl -s -X POST http://localhost:3000/api/auth/login -H 'Content-Type: application/json' -d '{\"username\":\"qa@local.test\",\"password\":\"Passw0rd!\"}')",
       "Bash(PGPASSWORD=verifai_app_local psql -h localhost -U verifai_app -d verifai -c \"DELETE FROM projects WHERE name IN \\('Example','ExampleRetry'\\);\")",
-      "Bash(PGPASSWORD=verifai_app_local psql -h localhost -U verifai_app -d verifai -c \"DELETE FROM projects WHERE name = 'TC-Test';\")"
+      "Bash(PGPASSWORD=verifai_app_local psql -h localhost -U verifai_app -d verifai -c \"DELETE FROM projects WHERE name = 'TC-Test';\")",
+      "Bash(PGPASSWORD=verifai_app_local psql -h localhost -U verifai_app -d verifai -c 'SELECT id, \"projectId\", status, \"startedAt\", \"finishedAt\", substring\\(\"errorMessage\", 1, 200\\) AS err FROM crawl_runs ORDER BY \"startedAt\" DESC LIMIT 10;')",
+      "Bash(psql -h localhost -U verifai_app -d verifai -c 'SELECT name, url, \"targetUsername\", status FROM projects WHERE id='\\\\''6977cd8c-a168-4274-a1f8-795556682e73'\\\\'';')"
     ]
   }
 }

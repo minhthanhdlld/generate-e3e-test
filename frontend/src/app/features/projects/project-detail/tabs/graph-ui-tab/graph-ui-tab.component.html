@@ -1,55 +1,90 @@
 <div class="space-y-4">
-  <div class="flex flex-wrap items-center gap-2">
-    <button
-      type="button"
-      (click)="startCrawl()"
-      [disabled]="isStarting || isRunInProgress"
-      class="h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-sm font-medium text-white inline-flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
-    >
+  <div class="flex flex-wrap items-center gap-2 pt-4">
+    <button type="button" (click)="startCrawl()" [disabled]="isStarting || isRunInProgress"
+      class=" h-9 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-sm font-medium text-white inline-flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed">
       @if (isStarting) {
-        <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"></circle>
-          <path d="M12 2a10 10 0 0110 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
-        </svg>
+      <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"></circle>
+        <path d="M12 2a10 10 0 0110 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+      </svg>
       } @else {
-        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+      </svg>
       }
       Run Crawl
     </button>
 
+    @if (isRunInProgress) {
+    <button type="button" (click)="cancelCrawl()" [disabled]="isCancelling"
+      class="h-9 px-3 rounded-lg border border-rose-200 bg-white text-sm font-medium text-rose-600 hover:bg-rose-50 inline-flex items-center gap-1.5 disabled:opacity-50">
+      {{ isCancelling ? 'Cancelling…' : 'Cancel' }}
+    </button>
+    }
+
     @if (runs.length > 0) {
-      <select
-        class="h-9 pl-3 pr-8 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
-        [(ngModel)]="selectedRunId"
-        (change)="onRunDropdownChange()"
-      >
-        @for (r of runs; track r.id) {
-          <option [value]="r.id">{{ r.startedAt | date:'short' }} · {{ r.status }}</option>
-        }
-      </select>
+    <select
+      class="h-9 pl-3 pr-8 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/30"
+      [(ngModel)]="selectedRunId" (change)="onRunDropdownChange()">
+      @for (r of runs; track r.id) {
+      <option [value]="r.id">{{ r.startedAt | date:'short' }} · {{ r.status }}</option>
+      }
+    </select>
     }
 
     <div class="ml-auto flex items-center gap-2 text-xs">
       @if (currentRun) {
-        <app-status-pill [status]="currentRun.status"></app-status-pill>
-      }
-      @if (currentRun?.errorMessage) {
-        <span class="text-rose-600 truncate max-w-xs" [attr.title]="currentRun?.errorMessage">{{ currentRun?.errorMessage }}</span>
+      <app-status-pill [status]="currentRun.status"></app-status-pill>
       }
     </div>
   </div>
 
+  <!-- Live spinner — only while a run is queued or running -->
+  @if (isRunInProgress) {
+  <div class="rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
+    <svg class="w-5 h-5 animate-spin text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" opacity=".25"></circle>
+      <path d="M12 2a10 10 0 0110 10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+    </svg>
+    <div class="flex-1 text-sm">
+      <p class="font-medium text-amber-800">
+        @if (currentRun?.status === 'queued') {
+        Queued — preparing crawler…
+        } @else {
+        Crawling target site…
+        }
+      </p>
+      <p class="text-xs text-amber-700 tabular-nums mt-0.5">
+        Elapsed {{ elapsedSec }}s · auto-stop at {{ softTimeoutSec }}s
+      </p>
+    </div>
+  </div>
+  }
+
+  <!-- Soft-timeout warning surfaced after auto-cancel -->
+  @if (warningMsg) {
+  <div class="rounded-xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800 flex items-start gap-2">
+    <svg class="w-4 h-4 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+      <line x1="12" y1="9" x2="12" y2="13"></line>
+      <line x1="12" y1="17" x2="12.01" y2="17"></line>
+    </svg>
+    <span><span class="font-medium">Warning:</span> {{ warningMsg }}</span>
+  </div>
+  }
+
+  @if (currentRun?.status === 'failed' && currentRun?.errorMessage && !warningMsg) {
+  <div class="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
+    <span class="font-medium">Last run failed:</span> {{ currentRun?.errorMessage }}
+  </div>
+  }
+
   @if (errorMsg) {
-    <div class="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{{ errorMsg }}</div>
+  <div class="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{{ errorMsg }}</div>
   }
 
   <app-ui-graph [graph]="graph" (nodeSelected)="onNodeSelected($event)"></app-ui-graph>
 
-  <app-ui-graph-node-drawer
-    [node]="selectedNode"
-    [screenshotUrl]="selectedNodeScreenshotUrl"
-    (closed)="closeDrawer()"
-  ></app-ui-graph-node-drawer>
+  <app-ui-graph-node-drawer [node]="selectedNode" [screenshotUrl]="selectedNodeScreenshotUrl"
+    (closed)="closeDrawer()"></app-ui-graph-node-drawer>
 </div>

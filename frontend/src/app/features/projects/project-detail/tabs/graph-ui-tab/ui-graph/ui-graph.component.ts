@@ -59,19 +59,20 @@ export class UiGraphComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.cy = cytoscape({
       container: this.graphHost.nativeElement,
       elements,
-      layout: { name: 'breadthfirst', directed: true, padding: 24, spacingFactor: 1.2 },
+      layout: { name: 'breadthfirst', directed: true, padding: 24, spacingFactor: 1.4, nodeDimensionsIncludeLabels: true },
       style: [
         {
           selector: 'node',
           style: {
             'background-color': '#475569',
             label: 'data(label)',
-            color: '#ffffff',
-            'font-size': 11,
-            'text-valign': 'center',
+            color: '#1e293b',
+            'font-size': 10,
+            'text-valign': 'bottom',
             'text-halign': 'center',
-            'text-wrap': 'ellipsis',
-            'text-max-width': '120px',
+            'text-wrap': 'wrap',
+            'text-max-width': '200px',
+            'text-margin-y': 4,
             width: 36,
             height: 36,
             'border-width': 0,

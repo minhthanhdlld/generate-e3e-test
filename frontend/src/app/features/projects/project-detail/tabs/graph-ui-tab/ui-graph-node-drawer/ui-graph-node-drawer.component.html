@@ -25,9 +25,47 @@
           <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Title</dt>
           <dd class="mt-1 text-sm text-slate-900">{{ node.label }}</dd>
         </div>
+        @if (phase) {
+          <div>
+            <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Phase</dt>
+            <dd class="mt-1">
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium ring-1"
+                    [class.bg-amber-50]="phase === 'pre-login'"
+                    [class.text-amber-800]="phase === 'pre-login'"
+                    [class.ring-amber-200]="phase === 'pre-login'"
+                    [class.bg-emerald-50]="phase === 'post-login'"
+                    [class.text-emerald-800]="phase === 'post-login'"
+                    [class.ring-emerald-200]="phase === 'post-login'">
+                {{ phase }}
+              </span>
+            </dd>
+          </div>
+        }
+        @if (triggerText) {
+          <div>
+            <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Reached via</dt>
+            <dd class="mt-1 text-sm text-slate-700">{{ triggerText }}</dd>
+          </div>
+        }
         <div>
           <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Forms</dt>
           <dd class="mt-1 text-sm text-slate-700">{{ formsCount }} form(s) detected</dd>
+        </div>
+        <div>
+          <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Anchors</dt>
+          <dd class="mt-1 text-sm text-slate-700">
+            @if (anchors.length === 0) {
+              <span class="text-slate-400">none</span>
+            } @else {
+              <ul class="space-y-1 max-h-48 overflow-y-auto">
+                @for (a of anchors; track a.href) {
+                  <li class="truncate" [attr.title]="a.href">
+                    <span class="text-slate-900">{{ anchorLabel(a) }}</span>
+                  </li>
+                }
+              </ul>
+            }
+          </dd>
         </div>
         <div>
           <dt class="text-xs font-medium text-slate-500 uppercase tracking-wide">Buttons</dt>

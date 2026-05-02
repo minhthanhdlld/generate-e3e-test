@@ -48,6 +48,15 @@ export class CrawlerController {
     return this.crawler.getRun(projectId, runId, user.sub);
   }
 
+  @Post('crawls/:runId/cancel')
+  cancelRun(
+    @CurrentUser() user: JwtUserPayload,
+    @Param('projectId', new ParseUUIDPipe()) projectId: string,
+    @Param('runId', new ParseUUIDPipe()) runId: string,
+  ) {
+    return this.crawler.cancelRun(projectId, runId, user.sub);
+  }
+
   @Get('screenshots/:hash')
   @Header('Content-Type', 'image/png')
   async screenshot(

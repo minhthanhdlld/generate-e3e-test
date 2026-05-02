@@ -25,4 +25,11 @@ export class CrawlerApiService {
       runId ? { runId } : undefined,
     );
   }
+
+  cancelRun(projectId: string, runId: string): Observable<CrawlRun> {
+    return this.api.post<CrawlRun>(
+      `/projects/${projectId}/crawls/${runId}/cancel`,
+      {},
+    );
+  }
 }
